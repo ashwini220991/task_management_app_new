@@ -1,5 +1,4 @@
 require_relative "boot"
-require 'logger'
 
 require "rails/all"
 
