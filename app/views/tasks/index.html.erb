@@ -1,0 +1,40 @@
+<div class="d-flex justify-content-between mb-3">
+  <h2>My Tasks</h2>
+  <%= link_to 'New Task', new_task_path, class: 'btn btn-primary' %>
+</div>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tasks.each do |task| %>
+      <tr>
+        <td><%= task.title %></td>
+        <td><%= task.description %></td>
+        <td>
+          <% if task.completed? %>
+            <span class="badge bg-success">Completed</span>
+          <% else %>
+            <span class="badge bg-warning">Pending</span>
+          <% end %>
+        </td>
+        <td>
+          <div class="d-flex flex-wrap gap-2">
+            <%= link_to 'View', task_path(task), class: 'btn btn-info btn-sm text-white' %>
+            <%= link_to 'Edit', edit_task_path(task), class: 'btn btn-secondary btn-sm' %>
+            <% unless task.completed? %>
+              <%= button_to 'Complete', mark_complete_task_path(task), method: :patch, class: 'btn btn-success btn-sm', form: { style: 'display:inline-block;' } %>
+            <% end %>
+            <%= button_to 'Delete', task_path(task), method: :delete, data: { confirm: 'Delete this task?' }, class: 'btn btn-danger btn-sm', form: { style: 'display:inline-block;' } %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

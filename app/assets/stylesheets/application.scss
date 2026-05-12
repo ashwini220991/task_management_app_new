@@ -1,0 +1,74 @@
+@import "bootstrap";
+
+body {
+  background: linear-gradient(135deg, #eaf6ff 0%, #dff1ff 45%, #f4fbff 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.navbar {
+  background: #4a90e2 !important;
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.25);
+}
+
+.main-container {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 20px;
+  border: 1px solid #d6ecff;
+  box-shadow: 0 10px 30px rgba(74, 144, 226, 0.12);
+}
+
+.task-card {
+  transition: all 0.3s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 32px rgba(74, 144, 226, 0.18);
+}
+
+.page-title {
+  color: #2c5282;
+  font-weight: 700;
+}
+
+.form-control {
+  border-radius: 12px;
+  border: 1px solid #c9e4ff;
+  padding: 12px;
+  background: #f9fdff;
+}
+
+.form-control:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.15);
+}
+
+.btn {
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: #4a90e2;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #357abd;
+}
+
+.alert {
+  border-radius: 12px;
+}
+
+.table {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+}
