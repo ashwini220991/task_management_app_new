@@ -4,13 +4,12 @@ class LargestSubmatrixFinder
     @matrix = matrix
   end
 
-  # Calculate largest submatrix
-  def call
+  def find
+    max_area = 0
+    best_submatrix = []
+
     rows = @matrix.length
     cols = @matrix.first.length
-
-    max_area = 0
-    best_matrix = []
 
     (0...rows).each do |top|
       temp = Array.new(cols, 1)
@@ -20,27 +19,37 @@ class LargestSubmatrixFinder
           temp[col] &= @matrix[bottom][col]
         end
 
-        width = 0
+        current = extract_longest_ones(temp)
 
-        temp.each_with_index do |value, index|
-          if value == 1
-            width += 1
-            area = width * (bottom - top + 1)
+        area = current.length * (bottom - top + 1)
 
-            if area > max_area
-              max_area = area
-
-              best_matrix = @matrix[top..bottom].map do |row|
-                row[(index - width + 1)..index]
-              end
-            end
-          else
-            width = 0
+        if area > max_area
+          max_area = area
+          best_submatrix = Array.new(bottom - top + 1) do
+            Array.new(current.length, 1)
           end
         end
       end
     end
 
-    best_matrix
+    best_submatrix
+  end
+
+  private
+
+  def extract_longest_ones(array)
+    longest = []
+    current = []
+
+    array.each do |value|
+      if value == 1
+        current << 1
+        longest = current.dup if current.length > longest.length
+      else
+        current = []
+      end
+    end
+
+    longest
   end
 end
