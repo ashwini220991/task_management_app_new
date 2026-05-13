@@ -1,24 +1,34 @@
-<p id="notice"><%= notice %></p>
+<div class="card shadow-sm p-4">
+  <h3 class="mb-4">Task Details</h3>
 
-<p>
-  <strong>Title:</strong>
-  <%= @task.title %>
-</p>
+  <div class="mb-3">
+    <strong>Title:</strong>
+    <p class="mt-2"><%= @task.title %></p>
+  </div>
 
-<p>
-  <strong>Description:</strong>
-  <%= @task.description %>
-</p>
+  <div class="mb-3">
+    <strong>Description:</strong>
+    <div class="border rounded p-3 mt-2 bg-light" style="white-space: pre-wrap; word-wrap: break-word;">
+      <%= @task.description %>
+    </div>
+  </div>
 
-<p>
-  <strong>Completed:</strong>
-  <%= @task.completed %>
-</p>
+  <div class="mb-3">
+    <strong>Status:</strong>
+    <% if @task.completed? %>
+      <span class="badge bg-success">Completed</span>
+    <% else %>
+      <span class="badge bg-warning text-dark">Pending</span>
+    <% end %>
+  </div>
 
-<p>
-  <strong>User:</strong>
-  <%= @task.user_id %>
-</p>
+  <div class="mb-3">
+    <strong>Completed At:</strong>
+    <%= @task.completed_at.present? ? @task.completed_at.strftime("%d %b %Y %I:%M %p") : "-" %>
+  </div>
 
-<%= link_to 'Edit', edit_task_path(@task) %> |
-<%= link_to 'Back', tasks_path %>
+  <div class="mt-4">
+    <%= link_to "Edit", edit_task_path(@task), class: "btn btn-secondary" %>
+    <%= link_to "Back", tasks_path, class: "btn btn-primary" %>
+  </div>
+</div>
