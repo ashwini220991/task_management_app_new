@@ -1,11 +1,34 @@
 # Handles all CRUD operations for user tasks
 class TasksController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_task, only: [:show, :edit, :update, :destroy, :mark_complete]
+  before_action :set_task, only: [:show, :edit, :update, :destroy, :mark_complete, :mark_incomplete]
 
   # Show all tasks for logged-in user
   def index
-    @tasks = current_user.tasks.order(created_at: :desc)
+    @tasks = current_user.tasks
+
+    if params[:search].present?
+      @tasks = @tasks.where("title ILIKE ?", "%#{params[:search]}%")
+    end
+
+    if params[:status].present?
+      case params[:status]
+      when "completed"
+        @tasks = @tasks.where(completed: true)
+      when "pending"
+        @tasks = @tasks.where(completed: false)
+      end
+    end
+
+    if params[:created_sort].present?
+      @tasks = @tasks.order(created_at: params[:created_sort])
+    elsif params[:completed_sort].present?
+      @tasks = @tasks.order(completed_at: params[:completed_sort])
+    else
+      @tasks = @tasks.order(created_at: :desc)
+    end
+
+    @tasks = @tasks.page(params[:page]).per(10)
   end
 
   # Show task 
@@ -48,7 +71,12 @@ class TasksController < ApplicationController
   # Mark task as completed
   def mark_complete
     @task.update(completed: true)
-    redirect_to tasks_path, notice: 'Task marked complete.'
+    redirect_to tasks_path, notice: "Task marked as complete."
+  end
+
+  def mark_incomplete
+    @task.update(completed: false)
+    redirect_to tasks_path, notice: "Task marked as pending."
   end
 
   private
@@ -58,6 +86,6 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :description)
+    params.require(:task).permit(:title, :description, :completed)
   end
 end

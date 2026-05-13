@@ -1,3 +1,16 @@
+<%= form_with url: tasks_path, method: :get, local: true, class: "row g-3 mb-4" do |f| %>
+  <div class="col-md-5">
+    <%= f.text_field :search, value: params[:search], placeholder: "Search tasks...", class: "form-control" %>
+  </div>
+  <div class="col-md-4">
+    <%= f.select :status, options_for_select([["All Tasks", ""], ["Completed", "completed"],
+          ["Pending", "pending"]], params[:status]), {}, class: "form-select" %>
+  </div>
+  <div class="col-md-3">
+    <%= f.submit "Filter", class: "btn btn-primary w-100" %>
+  </div>
+<% end %>
+
 <div class="d-flex justify-content-between mb-3">
   <h2>My Tasks</h2>
   <%= link_to 'New Task', new_task_path, class: 'btn btn-primary' %>
@@ -6,29 +19,45 @@
 <table class="table table-bordered">
   <thead>
     <tr>
+      <th>Task No</th>
       <th>Title</th>
       <th>Description</th>
       <th>Status</th>
+      <th>Completed At</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
-    <% @tasks.each do |task| %>
+    <% @tasks.each_with_index do |task, index| %>
       <tr>
+        <td><%= (@tasks.offset_value || 0) + index + 1 %></td>
         <td><%= task.title %></td>
-        <td><%= task.description %></td>
+        <td>
+          <span data-bs-toggle="tooltip" data-bs-placement="top" title="<%= task.description %>" style="cursor: pointer;"> <%= truncate(task.description, length: 50) %>
+          </span>
+        </td>
         <td>
           <% if task.completed? %>
             <span class="badge bg-success">Completed</span>
           <% else %>
-            <span class="badge bg-warning">Pending</span>
+            <span class="badge bg-warning text-dark">Pending</span>
+          <% end %>
+        </td>
+
+        <td>
+          <% if task.completed_at.present? %>
+            <%= task.completed_at.strftime("%d %b %Y %I:%M %p") %>
+          <% else %>
+            -
           <% end %>
         </td>
         <td>
           <div class="d-flex flex-wrap gap-2">
             <%= link_to 'View', task_path(task), class: 'btn btn-info btn-sm text-white' %>
             <%= link_to 'Edit', edit_task_path(task), class: 'btn btn-secondary btn-sm' %>
-            <% unless task.completed? %>
+            <% if task.completed? %>
+              <%= button_to 'Mark Incomplete', mark_incomplete_task_path(task), method: :patch, class: 'btn btn-warning btn-sm', form: { style: 'display:inline-block;' } %>
+            <% else %>
               <%= button_to 'Complete', mark_complete_task_path(task), method: :patch, class: 'btn btn-success btn-sm', form: { style: 'display:inline-block;' } %>
             <% end %>
             <%= button_to 'Delete', task_path(task), method: :delete, data: { confirm: 'Delete this task?' }, class: 'btn btn-danger btn-sm', form: { style: 'display:inline-block;' } %>
@@ -38,3 +67,6 @@
     <% end %>
   </tbody>
 </table>
+<div class="d-flex justify-content-center mt-4">
+  <%= paginate @tasks %>
+</div>

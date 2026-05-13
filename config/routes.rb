@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :tasks do
     member do
       patch :mark_complete
+      patch :mark_incomplete
     end
   end
 
