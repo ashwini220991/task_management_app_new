@@ -20,14 +20,6 @@ class TasksController < ApplicationController
       end
     end
 
-    if params[:created_sort].present?
-      @tasks = @tasks.order(created_at: params[:created_sort])
-    elsif params[:completed_sort].present?
-      @tasks = @tasks.order(completed_at: params[:completed_sort])
-    else
-      @tasks = @tasks.order(created_at: :desc)
-    end
-
     @tasks = @tasks.page(params[:page]).per(10)
   end
 
